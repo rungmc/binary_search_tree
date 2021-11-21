@@ -4,12 +4,13 @@ class Tree
   attr_reader :root
 
   def initialize(arr)
-    @root = build_tree(arr.uniq.sort)
+    @root = build_tree(arr)
   end
 
   def build_tree(arr)
     return if arr.empty?
 
+    arr = arr.uniq.sort
     mid = arr.size / 2
     Node.new(arr[mid], build_tree(arr[0, mid]), build_tree(arr[mid + 1, arr.size]))
   end
@@ -19,11 +20,9 @@ class Tree
 
     if val < node.value
       node.left = Node.new(val) if node.left.nil?
-
       insert(val, node.left)
     else
       node.right = Node.new(val) if node.right.nil?
-
       insert(val, node.right)
     end
   end
@@ -36,11 +35,10 @@ class Tree
     elsif val > node.value
       node.right = delete(val, node.right)
     else
-      return if node.right.nil? && node.left.nil?
       return node.right if node.left.nil?
       return node.left if node.right.nil?
 
-      #Finds smallest larger number among children to take its place.
+      #Finds the smallest larger number among children to take its place.
       leftmost = node.right
       leftmost = leftmost.left until leftmost.left.nil?
       node.value = leftmost.value
@@ -80,9 +78,5 @@ class Tree
   end
 
   def print(node = @root)
-    return if node.nil?
-
-    puts node.value
-    puts "#{print(node.left.value)} #{print(node.right.value)}"
   end
 end
