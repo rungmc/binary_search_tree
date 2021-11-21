@@ -37,11 +37,16 @@ class Tree
       node.right = delete(val, node.right)
     else
       return if node.right.nil? && node.left.nil?
-      return node.left if node.right.nil?
       return node.right if node.left.nil?
+      return node.left if node.right.nil?
 
-      #Two children?
+      #Finds smallest larger number among children to take its place.
+      leftmost = node.right
+      leftmost = leftmost.left until leftmost.left.nil?
+      node.value = leftmost.value
+      node.right = delete(node.value, node.right)
     end
+    node
   end
 
   def find(val, node = @root)
@@ -72,5 +77,12 @@ class Tree
   end
 
   def rebalance
+  end
+
+  def print(node = @root)
+    return if node.nil?
+
+    puts node.value
+    puts "#{print(node.left.value)} #{print(node.right.value)}"
   end
 end
