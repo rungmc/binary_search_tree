@@ -2,10 +2,14 @@ class Tree
   attr_reader :root
 
   def initialize(arr)
-    @root = self.build_tree(arr)
+    @root = build_tree(arr.uniq.sort)
   end
 
   def build_tree(arr)
+    return nil if arr.empty?
+
+    mid = arr.size / 2
+    @root = Node.new(arr[mid], build_tree(arr[0, mid]), build_tree(arr[mid + 1, arr.size]))
   end
 
   def insert(val)
