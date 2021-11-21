@@ -1,3 +1,5 @@
+require_relative 'node'
+
 class Tree
   attr_reader :root
 
@@ -6,19 +8,46 @@ class Tree
   end
 
   def build_tree(arr)
-    return nil if arr.empty?
+    return if arr.empty?
 
     mid = arr.size / 2
-    @root = Node.new(arr[mid], build_tree(arr[0, mid]), build_tree(arr[mid + 1, arr.size]))
+    Node.new(arr[mid], build_tree(arr[0, mid]), build_tree(arr[mid + 1, arr.size]))
   end
 
-  def insert(val)
+  def insert(val, node = @root)
+    return if node.value == val
+
+    if val < node.value
+      node.left = Node.new(val) if node.left.nil?
+
+      insert(val, node.left)
+    else
+      node.right = Node.new(val) if node.right.nil?
+
+      insert(val, node.right)
+    end
   end
 
-  def delete(val)
+  def delete(val, node = @root)
+    return if node.nil?
+
+    if val < node.value
+      node.left = delete(val, node.left)
+    elsif val > node.value
+      node.right = delete(val, node.right)
+    else
+      return if node.right.nil? && node.left.nil?
+      return node.left if node.right.nil?
+      return node.right if node.left.nil?
+
+      #Two children?
+    end
   end
 
-  def find(val)
+  def find(val, node = @root)
+    return node if node.value == val
+
+    val < node.value ? find(val, node.left) : find(val, node.right)
   end
 
   def level_order(&block)
