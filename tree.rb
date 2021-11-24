@@ -48,21 +48,31 @@ class Tree
   end
 
   def find(val, node = @root)
+    return if node.nil?
     return node if node.value == val
 
     val < node.value ? find(val, node.left) : find(val, node.right)
   end
 
-  def level_order(&block)
+  def level_order(node = @root, queue = [], result = [], &block)
+    block.call(node) if block_given?
+    result << node.value unless block_given?
+
+    queue << node.left unless node.left.nil?
+    queue << node.right unless node.right.nil?
+    return if queue.empty?
+
+    level_order(queue.shift, queue, result, &block)
+    result unless block_given?
   end
 
-  def inorder(&block)
+  def inorder(node = @root, queue = [], result = [], &block)
   end
 
-  def preorder(&block)
+  def preorder(node = @root, queue = [], result = [], &block)
   end
 
-  def postorder(&block)
+  def postorder(node = @root, queue = [], result = [], &block)
   end
 
   def height(node)
