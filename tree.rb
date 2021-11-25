@@ -66,13 +66,31 @@ class Tree
     result unless block_given?
   end
 
-  def inorder(node = @root, queue = [], result = [], &block)
+  def inorder(node = @root, result = [], &block)
+    inorder(node.left, result, &block) unless node.left.nil?
+    block.call(node) if block_given?
+    result << node.value unless block_given?
+    inorder(node.right, result, &block) unless node.right.nil?
+
+    result unless block_given?
   end
 
-  def preorder(node = @root, queue = [], result = [], &block)
+  def preorder(node = @root, result = [], &block)
+    block.call(node) if block_given?
+    result << node.value unless block_given?
+    preorder(node.left, result, &block) unless node.left.nil?
+    preorder(node.right, result, &block) unless node.right.nil?
+
+    result unless block_given?
   end
 
-  def postorder(node = @root, queue = [], result = [], &block)
+  def postorder(node = @root, result = [], &block)
+    postorder(node.left, result, &block) unless node.left.nil?
+    postorder(node.right, result, &block) unless node.right.nil?
+    block.call(node) if block_given?
+    result << node.value unless block_given?
+
+    result unless block_given?
   end
 
   def height(node)
@@ -87,6 +105,9 @@ class Tree
   def rebalance
   end
 
-  def print(node = @root)
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
+    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
 end
