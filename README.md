@@ -1,4 +1,4 @@
-# The Odin Project - A balanced BST builder
+# The Odin Project - Balanced BST Builder
 
 Builds a balanced binary search tree with level order, inorder, preorder, and postorder traversal.
 
