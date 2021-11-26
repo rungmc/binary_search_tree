@@ -54,55 +54,77 @@ class Tree
     val < node.value ? find(val, node.left) : find(val, node.right)
   end
 
+  # List all elements at each level of tree before moving down.
   def level_order(node = @root, queue = [], result = [], &block)
+    return if node.nil?
+
     block.call(node) if block_given?
     result << node.value unless block_given?
 
-    queue << node.left unless node.left.nil?
-    queue << node.right unless node.right.nil?
+    queue << node.left
+    queue << node.right
     return if queue.empty?
 
     level_order(queue.shift, queue, result, &block)
     result unless block_given?
   end
 
+  # Left - Root - Right
   def inorder(node = @root, result = [], &block)
-    inorder(node.left, result, &block) unless node.left.nil?
-    block.call(node) if block_given?
+    return if node.nil?
+
+    inorder(node.left, result, &block)
     result << node.value unless block_given?
-    inorder(node.right, result, &block) unless node.right.nil?
+    inorder(node.right, result, &block)
 
     result unless block_given?
   end
 
+  # Root - Left - Right
   def preorder(node = @root, result = [], &block)
+    return if node.nil?
+
     block.call(node) if block_given?
     result << node.value unless block_given?
-    preorder(node.left, result, &block) unless node.left.nil?
-    preorder(node.right, result, &block) unless node.right.nil?
+    preorder(node.left, result, &block)
+    preorder(node.right, result, &block)
 
     result unless block_given?
   end
 
+  # Left - Right - Root
   def postorder(node = @root, result = [], &block)
-    postorder(node.left, result, &block) unless node.left.nil?
-    postorder(node.right, result, &block) unless node.right.nil?
+    return if node.nil?
+
+    postorder(node.left, result, &block)
+    postorder(node.right, result, &block)
     block.call(node) if block_given?
     result << node.value unless block_given?
 
     result unless block_given?
   end
 
-  def height(node)
+  # Distance from node to leaf.
+  def height(node = @root, distance = -1)
+    return distance if node.nil? || find(node.value).nil?
+
+    left = height(node.left, distance + 1)
+    right = height(node.right, distance + 1)
+    left > right ? left : right
   end
 
-  def depth(node)
+  # Distance from node to root.
+  def depth(node = @root)
+    height(@root) - height(node)
   end
 
-  def balanced?
+  def balanced?(node = @root)
+    return true if node.nil?
   end
 
+  # Rebuilds tree from array.
   def rebalance
+    @root = build_tree(inorder)
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
