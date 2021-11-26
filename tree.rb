@@ -120,6 +120,8 @@ class Tree
 
   def balanced?(node = @root)
     return true if node.nil?
+
+    (height(node.left) - height(node.right)).abs <= 1 ? true : false
   end
 
   # Rebuilds tree from array.
@@ -127,6 +129,7 @@ class Tree
     @root = build_tree(inorder)
   end
 
+  # Thanks to TOP Discord for this one.
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
